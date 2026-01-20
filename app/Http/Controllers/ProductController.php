@@ -4,18 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product; // THIS LINE GOES HERE, outside the class
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
     // GET /api/products
     public function index()
     {
-        return response()->json(Product::all(), 200);
+        abort_if(! Auth::user()->can('product_view'), Response::HTTP_FORBIDDEN, "You don't have permission to access the list of products.");
+        return response()->json(Product::all(), Response::HTTP_OK);
     }
 
     // GET /api/products/{id}
     public function show($id)
     {
+        abort_if(! Auth::user()->can('product-view'), Response::HTTP_FORBIDDEN, "You don't have permission to access the products.");
         $product = Product::find($id);
 
         if (!$product) {
@@ -30,6 +34,7 @@ class ProductController extends Controller
     // POST /api/products
     public function store(Request $request)
     {
+        abort_if(! Auth::user()->can('product-create'), Response::HTTP_FORBIDDEN, "You do not have permission to create this product.");
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',

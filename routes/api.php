@@ -10,14 +10,12 @@ use App\Http\Controllers\ProductController;
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
-        Route::post('/logout', [AuthController::class, 'logout']);
-    });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 /*
@@ -28,18 +26,13 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::get('/products', [ProductController::class, 'index'])
-        ->middleware('permission:products-view');
+    Route::get('/products', [ProductController::class, 'index']);
 
-    Route::get('/products/{id}', [ProductController::class, 'show'])
-        ->middleware('permission:products-view');
+    Route::get('/products/{id}', [ProductController::class, 'show']);
 
-    Route::post('/products', [ProductController::class, 'store'])
-        ->middleware('permission:products-create');
+    Route::post('/products', [ProductController::class, 'store']);
 
-    Route::put('/products/{id}', [ProductController::class, 'update'])
-        ->middleware('permission:products-update');
+    Route::put('/products/{id}', [ProductController::class, 'update']);
 
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])
-        ->middleware('permission:products-delete');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
